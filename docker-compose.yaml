@@ -1,0 +1,32 @@
+services:
+  ros2-dev:
+    build:
+      context: .
+      args:
+        PASSWORD: 'root'
+        ROS_VER: 'iron'
+    image: ros2-dev
+    container_name: ros2-dev
+    tty: true
+    environment:
+      - DISPLAY=host.docker.internal:0
+      - QT_X11_NO_MITSHM=1
+      - XAUTHORITY=/root/.Xauthority
+      - PULSE_COOKIE=/tmp/pulse/cookie
+      - PULSE_SERVER=host.docker.internal
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /dev:/dev
+      - type: bind
+        source: ~/.config/pulse
+        target: /root/.config/pulse
+    devices:
+      - /dev/snd:/dev/snd
+      - /dev/bus/usb/:/dev/bus/usb/:rw
+      - /dev/video0:/dev/video0:mwr
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    ports:
+      - 10022:22
+    privileged: true
+    cpus: 8
+    mem_limit: 16g
