@@ -1,18 +1,18 @@
 FROM ubuntu:22.04
 
+# Declare arguments
 ARG PASSWORD='root'
-ARG ROS_VER='iron'
+ARG ROS_VER='humble'
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Required packages
+# Install required packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+    bash \
     git \
     ca-certificates \
-    lsb-release \
-    python3-gst-1.0 \
-    alsa-utils
+    lsb-release
 
 # Install ROS2
 RUN git clone https://github.com/Rione/home_ros2_setup && \
@@ -20,21 +20,25 @@ RUN git clone https://github.com/Rione/home_ros2_setup && \
     sed -i 's/sudo //g' home_ros2_setup/setup.bash && \
     ./home_ros2_setup/setup.bash && \
     . ~/.bashrc && \
-    . /opt/ros/${ROS_VER}/setup.sh
+    echo "source /opt/ros/${ROS_VER}/setup.sh" >> ~/.bashrc
 
-# Additional packages
+# Install additional packages (Optional)
 RUN apt-get install -y --no-install-recommends \
     vim \
-    terminator \
-    openssh-server
+    tmux \
+    openssh-server \
+    python3-gst-1.0 \
+    alsa-utils
 
-# Configure SSHd
+# Copy tmux's config file
+COPY .tmux.conf /root/ 
+
+# Configure SSH daemon (Optional)
 RUN mkdir /var/run/sshd && \
     echo "root:${PASSWORD}" | chpasswd && \
     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/g' /etc/ssh/sshd_config && \
     sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-WORKDIR /root/my_ws
-
 EXPOSE 22
+WORKDIR /root/my_ws
 CMD [ "/usr/sbin/sshd", "-D" ]
