@@ -4,10 +4,13 @@ services:
       context: .
       args:
         PASSWORD: 'root'
-        ROS_VER: 'iron'
+        ROS_VER: 'humble'
     image: ros2-dev
     container_name: ros2-dev
     tty: true
+    ######################################
+    # For MacOS
+    ######################################
     environment:
       - DISPLAY=host.docker.internal:0
       - QT_X11_NO_MITSHM=1
@@ -15,11 +18,27 @@ services:
       - PULSE_COOKIE=/tmp/pulse/cookie
       - PULSE_SERVER=host.docker.internal
     volumes:
+      - ./my_ws:/root/my_ws
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev
       - type: bind
         source: ~/.config/pulse
         target: /root/.config/pulse
+    ######################################
+    # For Linux
+    ######################################
+    # environment:
+    #   - DISPLAY=$DISPLAY
+    #   - QT_X11_NO_MITSHM=1
+    #   - XAUTHORITY=/root/.Xauthority
+    #   - PULSE_COOKIE=/tmp/pulse/cookie
+    #   - PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
+    # volumes:
+    #   - /tmp/.X11-unix:/tmp/.X11-unix
+    #   - /dev:/dev
+    #   - ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native
+    #   - ~/.config/pulse/cookie:/root/.config/pulse/cookie
+    ######################################
     devices:
       - /dev/snd:/dev/snd
       - /dev/bus/usb/:/dev/bus/usb/:rw
