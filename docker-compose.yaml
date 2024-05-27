@@ -34,6 +34,7 @@ services:
     #   - PULSE_COOKIE=/tmp/pulse/cookie
     #   - PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
     # volumes:
+    #   - ./my_ws:/root/my_ws
     #   - /tmp/.X11-unix:/tmp/.X11-unix
     #   - /dev:/dev
     #   - ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native
