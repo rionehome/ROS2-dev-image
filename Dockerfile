@@ -26,6 +26,7 @@ RUN git clone https://github.com/Rione/home_ros2_setup && \
 RUN apt-get install -y --no-install-recommends \
     vim \
     tmux \
+    terminator \
     openssh-server \
     python3-gst-1.0 \
     alsa-utils
